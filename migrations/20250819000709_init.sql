@@ -1,0 +1,38 @@
+-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE IF NOT EXISTS juror (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug VARCHAR(8) UNIQUE NOT NULL,
+	name VARCHAR(255) NOT NULL,
+
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS model (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+	name VARCHAR(255) NOT NULL,
+  author VARCHAR(255) NOT NULL,
+  description TEXT,
+
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS vote (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+	quality_score INT NOT NULL,
+
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+	juror_id INT REFERENCES juror(id) ON DELETE CASCADE,
+	model_id INT REFERENCES model(id) ON DELETE CASCADE
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE IF EXISTS vote;
+DROP TABLE IF EXISTS model;
+DROP TABLE IF EXISTS juror;
+-- +goose StatementEnd
